@@ -1,0 +1,23 @@
+# ---- Python ----
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.db
+*.sqlite3
+
+# ---- Virtual Environment ----
+venv/
+
+# ---- Flask / App Data ----
+instance/
+.env
+
+
+# ---- IDE / Editor ----
+.vscode/
+.idea/
+
+# ---- OS Files ----
+.DS_Store
+Thumbs.db
