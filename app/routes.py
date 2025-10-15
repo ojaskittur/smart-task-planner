@@ -14,23 +14,27 @@ def index():
 def create_goal():
     try:
         data = request.get_json()
-        
+
         goal = Goal(
             title=data.get('title', 'New Goal'),
             description=data.get('description', ''),
             deadline_days=data.get('deadline_days', 14)
         )
-        
+
         db.session.add(goal)
         db.session.commit()
-        
+
         # Generate tasks using LLM
-        llm_service = LLMService()
-        tasks_data = llm_service.generate_task_breakdown(
-            goal.description, 
-            goal.deadline_days
-        )
-        
+        try:
+            llm_service = LLMService()
+            tasks_data = llm_service.generate_task_breakdown(
+                goal.description,
+                goal.deadline_days
+            )
+        except (ValueError, RuntimeError) as e:
+            return jsonify({'error': str(e)}), 500
+
+
         # Create task objects
         for i, task_data in enumerate(tasks_data):
             task = Task(
@@ -41,14 +45,15 @@ def create_goal():
                 dependencies=json.dumps(task_data.get('dependencies', [])),
                 start_day=task_data.get('start_day', 0),
                 end_day=task_data.get('end_day', 1),
-                status='pending'
+                status='pending',
+                priority=task_data.get('priority', 'Medium')
             )
             db.session.add(task)
-        
+
         db.session.commit()
-        
+
         return jsonify(goal.to_dict()), 201
-        
+
     except Exception as e:
         db.session.rollback()
         return jsonify({'error': str(e)}), 500
@@ -63,6 +68,19 @@ def get_goal(goal_id):
     goal = Goal.query.get_or_404(goal_id)
     return jsonify(goal.to_dict())
 
+@main_routes.route('/api/goals/<int:goal_id>', methods=['PUT'])
+def update_goal(goal_id):
+    goal = Goal.query.get_or_404(goal_id)
+    data = request.get_json()
+
+    goal.title = data.get('title', goal.title)
+    goal.description = data.get('description', goal.description)
+    goal.deadline_days = data.get('deadline_days', goal.deadline_days)
+
+    db.session.commit()
+    return jsonify(goal.to_dict())
+
+
 @main_routes.route('/api/goals/<int:goal_id>', methods=['DELETE'])
 def delete_goal(goal_id):
     goal = Goal.query.get_or_404(goal_id)
@@ -74,9 +92,17 @@ def delete_goal(goal_id):
 def update_task(task_id):
     task = Task.query.get_or_404(task_id)
     data = request.get_json()
-    
+
     if 'status' in data:
         task.status = data['status']
-    
+    if 'title' in data:
+        task.title = data['title']
+    if 'description' in data:
+        task.description = data['description']
+    if 'duration_days' in data:
+        task.duration_days = data['duration_days']
+    if 'priority' in data:
+        task.priority = data['priority']
+
     db.session.commit()
     return jsonify(task.to_dict())

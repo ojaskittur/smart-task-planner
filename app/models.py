@@ -28,10 +28,11 @@ class Task(db.Model):
     title = db.Column(db.String(200), nullable=False)
     description = db.Column(db.Text)
     duration_days = db.Column(db.Integer, nullable=False)
-    dependencies = db.Column(db.Text) 
+    dependencies = db.Column(db.Text)
     start_day = db.Column(db.Integer)
     end_day = db.Column(db.Integer)
     status = db.Column(db.String(20), default='pending')
+    priority = db.Column(db.String(20), default='Medium') # New field
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
     def to_dict(self):
@@ -44,5 +45,6 @@ class Task(db.Model):
             'dependencies': json.loads(self.dependencies) if self.dependencies else [],
             'start_day': self.start_day,
             'end_day': self.end_day,
-            'status': self.status
+            'status': self.status,
+            'priority': self.priority # New field
         }
