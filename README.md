@@ -13,6 +13,12 @@ The **Smart Task Planner** is a web application designed to help users break dow
 * **Dependencies**: Define dependencies between tasks to ensure a logical workflow.
 * **Responsive Design**: A clean, intuitive, and mobile-friendly user interface.
 
+## Demo
+
+To see the Smart Task Planner in action, you can watch a full video demonstration on Google Drive.
+
+**[Watch the Video Demo Here](https://drive.google.com/file/d/1hWTccVhUFgYH8SSNKYAwG7lIKyUeW0-3/view?usp=sharing)**
+
 ## Technologies Used
 
 * **Backend**: Python, Flask, Flask-SQLAlchemy
