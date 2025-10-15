@@ -25,7 +25,6 @@ To see the Smart Task Planner in action, you can watch a full video demonstratio
 * **Frontend**: HTML, CSS, JavaScript, Bootstrap
 * **Database**: SQLite
 * **AI**: Google Generative AI (Gemini)
-* **Deployment**: Gunicorn
 
 ## Setup and Installation
 
